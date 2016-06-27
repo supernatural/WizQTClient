@@ -24,7 +24,7 @@
 // we make sure that our include of <memory> doesn't try to
 // pull in the TR1 headers: that's why we use this header 
 // rather than including <memory> directly:
-#include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
+#include <boost/config/no_tr1/memory.hpp>  // std::unique_ptr
 
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
@@ -139,15 +139,15 @@ inline void sp_enable_shared_from_this( ... )
 
 #endif // _MANAGED
 
-#if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION ) && !defined( BOOST_NO_AUTO_PTR )
+#if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION ) && !defined( BOOST_NO_UNIQUE_PTR )
 
-// rvalue auto_ptr support based on a technique by Dave Abrahams
+// rvalue unique_ptr support based on a technique by Dave Abrahams
 
-template< class T, class R > struct sp_enable_if_auto_ptr
+template< class T, class R > struct sp_enable_if_unique_ptr
 {
 };
 
-template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R >
+template< class T, class R > struct sp_enable_if_unique_ptr< std::unique_ptr< T >, R >
 {
     typedef R type;
 }; 
@@ -273,10 +273,10 @@ public:
         }
     }
 
-#ifndef BOOST_NO_AUTO_PTR
+#ifndef BOOST_NO_UNIQUE_PTR
 
     template<class Y>
-    explicit shared_ptr(std::auto_ptr<Y> & r): px(r.get()), pn()
+    explicit shared_ptr(std::unique_ptr<Y> & r): px(r.get()), pn()
     {
         Y * tmp = r.get();
         pn = boost::detail::shared_count(r);
@@ -286,7 +286,7 @@ public:
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    explicit shared_ptr( Ap r, typename boost::detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
+    explicit shared_ptr( Ap r, typename boost::detail::sp_enable_if_unique_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
     {
         typename Ap::element_type * tmp = r.get();
         pn = boost::detail::shared_count( r );
@@ -296,7 +296,7 @@ public:
 
 #endif // BOOST_NO_SFINAE, BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-#endif // BOOST_NO_AUTO_PTR
+#endif // BOOST_NO_UNIQUE_PTR
 
     // assignment
 
@@ -317,10 +317,10 @@ public:
 
 #endif
 
-#ifndef BOOST_NO_AUTO_PTR
+#ifndef BOOST_NO_UNIQUE_PTR
 
     template<class Y>
-    shared_ptr & operator=( std::auto_ptr<Y> & r )
+    shared_ptr & operator=( std::unique_ptr<Y> & r )
     {
         this_type(r).swap(*this);
         return *this;
@@ -329,7 +329,7 @@ public:
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    typename boost::detail::sp_enable_if_auto_ptr< Ap, shared_ptr & >::type operator=( Ap r )
+    typename boost::detail::sp_enable_if_unique_ptr< Ap, shared_ptr & >::type operator=( Ap r )
     {
         this_type( r ).swap( *this );
         return *this;
@@ -338,7 +338,7 @@ public:
 
 #endif // BOOST_NO_SFINAE, BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-#endif // BOOST_NO_AUTO_PTR
+#endif // BOOST_NO_UNIQUE_PTR
 
 // Move support
 

@@ -80,7 +80,7 @@
 // new-style iostreams, and no conformant std::allocator:
 //
 #if (BOOST_RWSTD_VER < 0x020000)
-#  define BOOST_NO_AUTO_PTR
+#  define BOOST_NO_UNIQUE_PTR
 #  define BOOST_NO_STRINGSTREAM
 #  define BOOST_NO_STD_ALLOCATOR
 #  define BOOST_NO_STD_LOCALE

@@ -16,7 +16,7 @@
 #if __GNUC__ < 3
 #   if __GNUC_MINOR__ == 91
        // egcs 1.1 won't parse shared_ptr.hpp without this:
-#      define BOOST_NO_AUTO_PTR
+#      define BOOST_NO_UNIQUE_PTR
 #   endif
 #   if __GNUC_MINOR__ < 95
       //
