@@ -531,7 +531,7 @@ target_link_libraries(${PROJECT_NAME}
 else(APPSTORE_BUILD)
 target_link_libraries(${PROJECT_NAME}
     quazip
-    cryptlib
+    crypto++
     clucene-core-static
     clucene-shared-static
     extensionsystem
@@ -539,6 +539,7 @@ target_link_libraries(${PROJECT_NAME}
     coreplugin
     helloworld
     markdown
+    z
     ${CMAKE_DL_LIBS}
 )
 endif(APPSTORE_BUILD)
